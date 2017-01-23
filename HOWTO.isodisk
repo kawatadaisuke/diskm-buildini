@@ -1,0 +1,67 @@
+
+HOWTO an isolated disk with NFW external DM halo example
+
+This directory is $INIC 
+
+*** building initial condition 
+
+ There are two steps. First generate a stable disk, then convert it to the initial condition for GCD+
+
+> cd $INIC/dbulhalo/src
+> make clean
+> make 
+ will generate ../pgen
+ please make sure that MNS in defline.f is larger than nr*nth*nz/nprocs (main.f)
+> cd ..
+> pgen
+ or 
+> mpirun -np ? pgen
+ or
+> qsub run.sh
+ The code will read ini/input.dat (example is input.dat.example)
+ and generage output/*.dat
+
+ Please carefully look at the initial condition file, ini/input.dat.
+ You can see that you can change halo mass, concentration,
+ disk stellar and gas mass, scale length, and metallicity gradient
+ for gas disk using this ini/input.dat
+
+ run pgen and generate a stable disk. This is a parallel job, and
+ need to use queing system. Please use your own script on your machine.
+
+ The example initial condition generate three disk
+ output/diskc1.dat and output/diskc2.dat output/diskc3.dat
+ They will be stellar and gas disk respectively.
+
+ It is also good idea to check rotation curve for gas and star.
+ For example with gnuplot
+gnuplot> plot "./vgasgridz0.dat" u 1:4, "./vgridz0.dat" u 1:4
+ will show you gas and stellar rotation curve at z=0.
+gnuplot> splot "./vgasgridz0.dat" u 1:3:4
+ will show you gas rotation velocty on x-z plane.
+
+> mv output/diskc1.dat ../ini/disk1-1.dat
+> mv output/diskc2.dat ../ini/disk1-2.dat
+> mv output/diskc3.dat ../ini/disk1-3.dat
+
+ go to one directory up
+> cd .. 
+> cd src
+> make clean
+> make
+s will create ../inigen which will read the galaxy data created by pgen and copied to $INIC/ini/*.dat and generate initial condition for gcd+
+> cd ..
+
+> emacs ini/input.dat
+
+ again, please look carefully this file. 
+ You can now set which disk will be gas or star, and metallicity gradients
+ and age-metallicity relation for stellar disk.  I encourage you to look at $INIGEN/main.f, too.
+
+> inigen
+ This will generate gas.dat gas-metal.dat star.dat star-metal.dat
+ You also need dbulhalo/mext.dat, which is the mass profile of halo.
+
+ You can copy them to $SIM/ini, assuming $SIM is your GCD+ run directory
+
+> mv gas*.dat star*.dat dbulhalo/mext.dat $SIM/ini

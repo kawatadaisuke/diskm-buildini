@@ -1,0 +1,373 @@
+
+
+### use version control.
+
+06/01/2016
+ ver37.1
+ diskdeng was not setted with flare density distribution
+
+15/12/2015
+ diskspgen use log grid for star's too
+ allow zd to change with the radius
+ zd = zd0 exp (R/Rflzd)   only for stellar disk
+ disksdenm, expdgen
+### ver. 37 15/12/2015
+
+20/07/2015
+ add velocity limit from espace velocity in 
+### ver. 36, 20/07/2015
+
+11/06/2015
+ add velocity limit from escape velocity in expdgen.f only for flagmexth.le.1
+### ver. 35, 11/06/2015
+
+11/06/2015
+ add escape velocity output in dmhaloprof.f
+
+main.f
+ xrhg, rcuthg set the cut radius of the hot gas (which should be rcutdmh)
+hgtemprof.f calculate hot gas mass up to rcuthg, mtothgrc and temperature profile
+hgsetang.f does not use rmdh() and etc., so it is ok.
+hgpgen.f generate particles up to rcuthg using
+allow to put the gas outside of Rvir
+### ver. 34, 20/04/2015
+
+09/04/2015
+treebuild, treeforce skipped, when np=0
+
+use hydrostatic condition for hot gas temperature
+### ver. 33  25/03/2015
+
+*** temperature from velocity dispersion seems long
+
+prof.f
+ mrhgr deleted
+ mrtotf deleted
+
+density profile thermal core + nfw (Maller & Bullock)
+temperature of the gas is calculated from velocity dispersion
+Referring back/ver11/main.f, but also follow bulge generator
+### ver. 32 add hot halo gas since 21/03/2015
+
+16/10/2014
+ output vccont.dat for circular velocity contribution from disk and spherical components, like DM and bulge.
+
+15/10/2014
+set
+ ngr and ngz=200 is enough for stellar disk, and less noisy
+ eta2>=1
+ vph<=vc
+
+07/10/2014
+ vgrid.f for drhovr also use log differentiation
+### ver.31 copy from ver.29, log grid seems better after testing with mwdm
+
+06/10/2014
+ vgrid.f for eta calculation, use d A/d r= d A/d log10 r x d log10 r/dr (=1/(r ln 10))
+ from differentiation of force field use three points first derivatives, e.g. http://www.trentfguidry.net/post/2010/09/04/Numerical-differentiation-formulas.aspx
+### copy from ver26, use log
+
+22/07/2014
+main.f
+ - a bug when outputting gasgrid.dat, add
+            if(i.eq.0) then
+              pnpi=id_rzg(i,j)
+              pnpo=id_rzg(i+1,j)
+            else if(i.ne.ngr) then
+ for i=0 case.
+
+05/06/2014
+ - vgasgrid.f
+  gas velocity do not go larger than vc
+ - flaggd=2 is allocated, call exp2d profile and mrexp2d are numerically calcuated and tabulated
+ - add option to use exp(-x/h-h/x) for gas surface density
+
+09/02/2014
+ - velocity dispersion, vr^2=vz^2  (springel et al. 2005)
+ - bulge truncation radius = rcutdmh (cut radius of halo)
+ - rhonfwsw, if live halo (flag=0), use exp truncation
+  -> dmhaloprof  (produce mext-dmh.dat and mexta-dmh.dat, the name will be changed if no bulge produced)
+ - hpbulext output mext.dat only if flagmexth=-1, if not -1, only update of mrdmh is done, which will be used in extf() to calculate the external force for the disk particles
+ add a routine to generate live bulge
+### ver.25
+
+07/01/2014
+ set constant low metallicity where the gas density is lower.
+ diskmetg.f
+ * input.dat format change
+### ver. 24
+
+25/11/2013
+hydstat.f
+ integrate dP/dz=-rho F
+ * only for fpjm.ge.0  -> tried but it is not easy, because of the pressure floor -> bring bacck to ver.22
+
+new eos.dat (ver.2) 
+to allow to have low dense and high T gas, decrease RHO_LIM=1e-5
+### ver. 23
+
+17/06/2013
+vgrid.f
+            vph_rzg(pn)=vph2(i,j)-vr2(i,j)/eta2(i,j)
+->
+
+          if(eta2(i,j).gt.0.0d0) then
+            vsigph_rzg(pn)=dsqrt(vr2(i,j)/eta2(i,j))
+c <vph>^2
+            vph_rzg(pn)=vph2(i,j)-vr2(i,j)/eta2(i,j)
+          else
+            vsigph_rzg(pn)=0.0d0
+            vph_rzg(pn)=vph2(i,j)
+          endif
+
+
+Mdisk is defined as the mass within Rcut for gas disk
+### ver.22
+
+use peff for pressure limit for resolution (for the code since pv34.6)
+### ver.21
+
+ver20
+ - prof.f use a pure NFW profile
+ - total mass within rvir is < 1 % offset, even with the exact solution. 
+   -> related to the definition of Mvir and r200 in NFW profile.
+### ver.20
+
+15/09/2012
+ option for flat density disk
+### ver. 19
+
+14/09/2012
+ output myup for gas disk
+13/09/2012
+ checking the 2D density, after generating particles.
+### ver. 18
+
+22/08/2012
+ add an option for isothermal disk
+### ver. 17
+
+07/06/2012
+ add hernquist bulge to mext.dat
+ flagmexth=-1  read mbul, refuc
+### ver.16
+
+17/08/2011
+ ndengrid 
+  change normalisation limit if flagexit=1
+  RHO_LIM*1.001d0* cut off
+ zcut for gas particles
+### ver.15
+
+06/07/2011
+ xrt=0.25, xcut=4.0 gives convergence.
+### ver.14 NFW+Rodionov & Athanassoula (2011, eq. 3) truncation.
+
+03/07/2011 
+ dmhalo
+  xcut>7.5 when rt=0.25
+  ngr,ngz>600  after convergence test
+  (high ngr,ngz for disk is not good, because it leads noise for differential)
+ vgrid.f and dmhvgrid.f 
+ if fx, fz>0, set 0
+NFW truncation:
+ mrdmh is made between frini0*rt-xcut*rt
+ use Springel & White 99 exp truncation
+ (cf. Rodinov & Athanathoula uses exp(-x^2) truncation)
+16/06/2011
+ introduce rcut for halo profile
+### ver. 13 live halo, 16/06/2011
+
+04/03/2011
+ dsig=3, RHO_LIM=1e-3 seems needed?
+ h uses maximum dx
+01/03/2011
+constant density halo option
+### ver. 12.4
+
+25/02/2011
+ ndendgen.f
+  add smoothing
+ hydstat.f, dpdr seems getting too big
+ some smoothing for density map, nddenggrid.f
+  assuming thicker gas disk at larger r.
+ RHO_LIM adjustment in gasdgen.f and ndenggrid.f
+ since some of large radii particles can have z=0
+17/02/2011
+ Z=10.0 is too high cooling rate. set upper limit Z=Zsun
+15/02/2011
+ RHO_LIM=1.0e-3¡¡-> 1e-4 nh
+ add             if(fx_rzg(pn).lt.0.0d0) then
+ in vgasgrid.f
+12/02/2011
+ add Q output for vgridz0.dat
+08/02/2011
+ option with jeans mass limit
+### ver.12.3
+03/02/2011
+ softening... fixed 1.0e-3 (100 pc) works the best?
+ merge disk particle gen and velocity gen and reduce memory
+ separate sample disks for each disk component
+### ver 12.2
+03/02/2011
+ sample disk, use a particle distribution for both gas and stellar disk
+ (which does not work well...)
+02/02/2011
+ for stellar disk
+   rvir x frini=1e-5 works as good as rlim x frinid, zlim x frinidz
+ but
+   log disks and rvir x frini does not work. too much occilation.
+01/02/2011
+ now with log
+ disksgen.cdz.f  generating the grid constant dz 
+ log sampling is slightly better, but stellar disk mass is a bit off.
+25/01/2011
+ add gas
+### ver 12.1
+24/01/2011
+ver 12.0 only N-body particles 
+23/01/2011
+ no set_den
+ disk particle sampling changing with mass is better 
+ rzg grid, less number of grid could be better
+
+18/01/2011
+tree.F treef.F from pv32.17
+no adiabatic collapse option
+velocity dispersion from potential
+Springel & Hernquist (2005) model
+### ver.12
+
+03/07/2010
+ gas velocity dispersion 
+### ver.11
+ 
+05/07/2010
+ diskvgen.f
+  use total surface density of disk for vsig
+  use dexp(-rq/hd) for surface density
+
+16/06/2010
+
+gas disk x^2 exp(-x/a) option 
+ integration ...  *** fixed (x2) 5/07/10
+  to r -> 2 pi (6 a^4-a(6 a^3+6 a^2 r + 3 a r^2 + r^3) exp(-r/a)
+    pi (6 a^4-(6 a^4+6 a^3 r + 3 a^2 r^2 + a r^3) exp(-r/a)
+  to infinity -> pi 12 a^4
+ therefore, Mr(<r)
+   (1.0-(1.0+(r/a)+(1/2) (r/a)^2 +(1/6) (r/a)^3) exp(-r/a)
+ flagdp 0: exp, 1: x^2 exp(-x/a)
+ only apply to the gas, and no velocity dispersion.
+ recommend to set high-z and do relax.
+
+### ver.9
+ disk x^2 exp(-x/a) option 
+### since 16/06/2010
+
+14/06/2010
+ bug fix for fvshg
+ j propto r
+13/06/2010
+ reduce thermal energy by rotation velocity <- spin parameter.
+          up(i)=(vsigp**2-vph**2)/(GAM-1.0d0)
+
+### ver. 8  10/06/2010
+ hot gas radius cut by tmhgrc vs. tmhg
+ hot gas temperature profile <- velocity dispersion profile'
+### ver.8
+
+### ver. 7  8/06/2010
+ no adiabatic contraction case, constant T hot gas
+ simplified a bit
+### ver. 7 
+
+11/03/09
+ flagb=0
+ binary output
+
+02/07/09
+ main.f, prof.f
+  for no hot gas case
+
+21/06/09
+ coolden.2006.f
+  calculating tc=tdyn  at rhovir
+ coolden.f
+  calculate density at tvir.
+
+20/06/09
+ He abundance is corrected
+ input met by Z/Zsun
+
+16/06/09
+
+find rcool
+if rcool>rvir, then use rho(rvir) get t(rvir).
+ since tcool<tdyn, never reach Tvir
+ Then, start from there...
+ inside rcool. get pressure, starting from constant density
+
+set DM halo fraction using universal fb, and allow adiabatic expansion
+use total mass x fb
+halo gas profile first.
+### ver.6 14/06/09 ###
+
+14/06/09
+ main.f
+  some warning...
+
+29/05/09
+ set temperature of disk and adjust velocity dispersion. 
+### ver. 5 ###
+
+
+16/04/09
+ output mext.dat,
+  halo M(<r) profile for making the halo an external force.
+
+06/04/09
+ halo gas:
+  < rvir
+  so far, only valid when rcool > rvir, and T(r)=const.=Tvir
+  at rcool, tcool=hage
+  v=0
+
+31/03/09
+ hot gas:
+  density profile:
+   seek cooling density (hint from Maller and Bullock)
+   inside: isothermal
+   outside: NFW with thermal core (Maller and Bullock)
+
+### ver.4
+
+01/04/09
+ add age of the halo, to compare with tcool.
+ For 5e11 Msun halo, tdyn is too high, compared with tcool
+  -> still small.
+ look for density tcool=tdyn?
+
+30/03/09
+ change diskgen.f input to output prof for disk 1 and 2
+
+18/3/09
+ output hot gas, assuming negligble mass.
+
+### ver.3
+
+13/2/09
+ output density and only disk allows to have two components.
+ haven't done two components test though.
+ Note: density is not total density, but density for each component.
+  disk densities do not output.
+
+%%% ver.2 13/02/09
+
+9/20 2007
+ update to allow no halo model
+
+1/5 2007
+
+ use  mr3dexpd() for the velocity dispersion of bulge and halo
+
+

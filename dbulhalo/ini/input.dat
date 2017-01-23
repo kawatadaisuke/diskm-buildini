@@ -1,0 +1,35 @@
+0             ! if 0, binary output
+22523         ! number of halo particles
+1             !  not 0, only mext.dat, 1:NFW, otherwise constant density
+1.5e12       ! Mvir (Msun) Mhalo=Mvir-Mbaryon
+10.0       ! cnfw <- charden.exe in NFW
+1.0001 1.0            ! xcut: rmax=rt*xcut, xrt: rt=xrt*rvir
+0.266 0.71 0.0  ! omg0 h z
+0.044          ! omgb
+0           ! number of bulge particles
+0.0e11 0.3      ! Mbul (Msun), refac: Re = Re(SDSS) x refac
+0         ! number of hot gas particles
+0.0e10 0.04     ! Mtothg (Msun), Lam_spin
+1.0             ! xrhg: hot gas generated r<rvir x xrhg
+3              ! number of disks  (since ver.2)
+40000 0             ! number of disk particles, 0: star
+4.0e10 0.0         ! Mdisk (Msun)  T (1e4 K)
+4.0 0.35 1.0        ! h, z0 (kpc) Rflzd (kpc)
+0                    ! if not 0, zd=z0 exp(R/Rflzd)
+20.0 20.0      ! rflim, zflim: rlim=h x rflim, zlim=z0 x zflim
+2.0            ! frq
+15000 0             ! number of disk particles, 0: star
+1.5e10 0.0         ! Mdisk (Msun)  T (1e4 K)
+2.5 1.0 1.0       ! h, z0 (kpc) Rflzd (kpc)
+0                    ! if not 0, zd=z0 exp(R/Rflzd)
+20.0 20.0      ! rflim, zflim: rlim=h x rflim, zlim=z0 x zflim
+1.0            ! frq
+10000 1             ! number of particles, 1: gas
+1.0e10 0.0         ! Mdisk (Msun)  T (1e4 K)
+8.0 1.0 1.0       ! h, z0 (kpc) Rflzd (kpc)
+0                    ! if not 0, zd=z0 exp(R/Rflzd)
+20.0 20.0      ! rflim, zflim: rlim=h x rflim, zlim=z0 x zflim
+120                    ! NUTHJM: np for JM threshold, 2xnnb
+-0.05 0.2 0.0 0.0     ! d[Fe/H],[Fe/H]0,d[al/Fe],[al/Fe]0
+0.0001 -1.0             ! nHlim disk density limit, halo gas metallicity [Fe/H]
+0           ! number of halo gas particles.

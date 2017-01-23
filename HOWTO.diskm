@@ -1,0 +1,112 @@
+
+29 July 2016
+
+how to for merger disk simulation
+*** no example provided ***
+
+Outline
+
+1. build up an initial condition for isolated galaxy
+2. run merger simulation
+
+This directory $GCDP
+your working directory $WORK
+your initial condition model is $MODEL
+ $MODEL=diskm
+$SIM: your simulation profile
+ $SIM=diskm
+
+> mdkir $WORK/inic
+> mdkir $WORK/run
+> cd $GCDP
+> cp -r inic/$MODEL $WORK/inic
+> cp -r run/disk $WORK/run
+
+$PGEN = ver15
+$INIGEN = ver37.5
+$CODE=code  (please copy from bitbucket site)
+
+*** 1. build up an initial condition for isolated galaxy
+
+ There are two steps. First generate stable bulge and halo, then convert it to the initial condition for GCD+
+
+> cd $WORK/inic/$MODEL/dbulhalo
+> cd $INIGEN
+> make clean
+> make
+ This will generage ../pgen
+> cd ..
+> emacs ini/input.dat
+
+ Please carefully look at the initial condition file.
+ You can see that you can change halo mass, concentration,
+ disk stellar and gas mass, scale length, and metallicity gradient
+ for gas disk using this ini/input.dat
+
+> qsub run.sh
+ run pgen and generate a stable disk. This is a parallel job, and
+ need to use queing system. Please use your own script on your machine.
+
+ The example initial condition generate 
+ output/halo.dat
+ output/diskc1.dat and output/diskc2.dat
+
+> mv output/halo.dat ../ini/halo1.dat
+> mv output/diskc1.dat ../ini/disk1-1.dat
+> mv output/diskc2.dat ../ini/disk1-2.dat
+
+ If you want to create, 2nd galaxy with different configulation, please do the same above, and copy the results to ../ini/halo2.dat, disk2-1.dat, and disk2-2.dat
+ In this example, use the same disk galaxy for Gal 2.
+
+> cd ../ini
+> cp disk1-1.dat disk2-1.dat
+> cp disk1-2.dat disk2-2.dat
+> cp halo1.dat halo2.dat
+> cd ..
+
+compile inigen and run
+
+> cd ../$INIGEN
+> make clean
+> make
+> cd ..
+
+> emacs ini/input.dat
+
+ again, please look carefully this file. 
+2                ! 0: ecc,rperi merger, 1: smashing gal2, 2: set x,z and vx,vy for gal2
+-50.0 15.0 0.0 100.0     ! x,z (kpc) vx,vy (km/s) for gal2
+
+ set the initial position (note only for x and z) and velocity (only for vx, vy) for Gal 2
+
+> inigen
+
+ This will generate gas.dat gas-metal.dat star.dat star-metal.dat dm.dat.
+ 
+ You can also see what you the ascii version of the data with gnuplot
+
+> gnuplot
+...
+gnuplot> set xr [-.1:.1]
+gnuplot> set yr [-.1:.1]
+gnuplot> plot "astar.dat" w d
+ face on plot of disk particles
+gnuplot> plot “agas.dat” u 1:3 w d
+ edge on plot of disk particles
+gnuplot> plot “admhalo.dat” u 1:3 w d, "adm.dat" u 1:3 w d
+ edge-on plot of dm halo and disk particles
+
+ move the initial condition data to run/$SIM/ini
+
+> mv gas*.dat star*.dat dm.dat ../../run/$SIM/ini/
+
+
+
+
+
+
+
+
+
+
+ 

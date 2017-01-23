@@ -1,0 +1,86 @@
+
+### src on git 23/01/2017
+
+12/12/2015
+ rot.f do not move the disk, but move in main.f
+ flagini=2 set initial position and velocity for Gal 2
+### ver.15
+
+09/04/2015
+main.f mhgas update was not in do loop. fixed.
+
+read ini/hgas*.dat
+### ver.14
+
+flagvch
+ if not 0, velocity is corrected to set the momentum 0 for halo.
+### ver. 13
+
+flagini=1
+ smashing model. Gal 2 with v0x (along x-axis) and bimpz offset from x-y plane
+### ver.12
+
+add bulge particle output
+### ver.11
+
+add DM halo particle output
+### ver.10
+
+14/09/2012
+ read myup from dbulhalo output
+12/09/2012
+ main.f add vrotp output for a*.dat
+03/08/2012
+ nhp output in agas.dat
+ mass of the cold gas 
+21/11/2011
+ *** only for disk ***
+ no number limit version
+### ver.9
+
+08/07/2011
+ flagvc: option of velocity correction
+### ver.8
+
+07/02/2011
+ read ini/mgr.dat, and assign mass group depending on the age.
+31/01/2011
+ read dbulhalo/ver12.1 data
+ Z also adjust with Z/H
+ not applied hot gas yet.
+26/01/2011
+ adjust H abundance according to metallicity
+23/01/2011
+ read dbulhalo/ver12 data
+
+30/11/2010
+      vx12=dsqrt((etot+G*mgalt(1)*mgalt(2)/rini)*2.0d0/myum)
+
+04/10/2010
+ main.f MND=10 for disk
+
+30/05/2010
+ add i and omg rotation for stars
+
+15/04/2010
+ radius was wrong...
+ add [alpha/Fe] vs. [Fe/H] slope
+24/03/2010
+ age-metallicity relation and metal dispersion
+ to generate initial condition for pv32.6 
+### ver.6
+
+11/03/2010
+ flagbi=0
+ binary input
+
+31/01/2010
+ output list of disk particles 
+
+ read temperature from ini/disk*.dat
+ read disk data from dbulhalo/ver5
+### ver.4
+
+### ver.3 adding halo gas and in capable of generating 2 disks.
+
+### ver.2 for pv30.9 code.13/02/09 requires output of dbulhalo ver.2

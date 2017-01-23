@@ -1,0 +1,8 @@
+1            ! flag 0: binary, otherwise: ascii output
+1            ! # of disk
+10000         ! # of disk particles
+0.068        ! disk mass (1e12 Msun)
+2.6 0.28     ! scale length and height (kpc)
+30.0 30.0    ! radius and z limit to generate particle
+1.0          ! fr=sigr^2/sigz^2
+
