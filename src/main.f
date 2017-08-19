@@ -630,6 +630,8 @@ c *** gas disk ***
               do i=1,mwnd(ig,id)
                 read(51) xp,yp,zp,vxp,vyp,vzp,mpart,rhop,pg,myup
                 mdisk = mdisk+mpart
+c set Galactic radius before changing the inclination and the centre
+                rg=dsqrt(xp**2+yp**2)
 c *** inclination setting ***
                 call rot(xp,yp,zp,vxp,vyp,vzp,ig,igal,omgal,flagrot(ig)
      &           ,xini,vxini,vyini)
@@ -643,7 +645,6 @@ c *** gas properties ***
                 hg=(mpart/rhop)**THIRD
                 flagfdg=0
 c *** gas disk metallicity, use 2D radius ***
-                rg=dsqrt(xp**2+yp**2)
                 fehp=metgal(1,ig,id)*(rg*LUKPC)+metgal(2,ig,id)
      &            +metgal(3,ig,id)*dble(gasdev(idum))
                 fehg=fehp
@@ -726,6 +727,8 @@ c *** stars ***
               do i=1,mwnd(ig,id)
                 read(51) xp,yp,zp,vxp,vyp,vzp,mpart,rhop
                 mdisk = mdisk+mpart
+c set radius before inclination and the centre changed. 
+                rs=dsqrt(xp**2+yp**2)
 c *** inclination setting ***
                 call rot(xp,yp,zp,vxp,vyp,vzp,ig,igal,omgal,flagrot(ig)
      &           ,xini,vxini,vyini)
@@ -739,7 +742,6 @@ c *** set age ***
      &            dble(ran1(idum))
      &            *(tagegal(2,ig,id)-tagegal(1,ig,id)))/TMUGYR
 c *** stellar disk metallicity ***
-                rs=dsqrt(xp**2+yp**2)
                 fehp=metgal(1,ig,id)*(rs*LUKPC)+metgal(2,ig,id)
      &            +ages*metgal(4,ig,id)*TMUGYR
      &            +metgal(3,ig,id)*dble(gasdev(idum))
@@ -988,6 +990,9 @@ c *** halo hot gas ***
           do i=1,mwnhg(ig)
             read(51) xp,yp,zp,vxp,vyp,vzp,mpart,rhop,uthp
             mhgas=mhgas+mpart
+c set the radius before inclination and the centre changed
+            r2dg=dsqrt(xp**2+yp**2)
+            rg=dsqrt(xp**2+yp**2+zp**2)
 c *** inclination setting ***
             call rot(xp,yp,zp,vxp,vyp,vzp,ig,igal,omgal,flagrot(ig)
      &        ,xini,vxini,vyini)
@@ -1055,8 +1060,6 @@ c *** Nh density
             nhp=(((mpart-(mzZg+mzHeg)/MUSM))/mpart)
      &        *rhop*(DU/MP)
 c *** ascii output
-            r2dg=dsqrt(xp**2+yp**2)
-            rg=dsqrt(xp**2+yp**2+zp**2)
             if(mod(i,npaskip).eq.0) then
               vrotp=(vxp*yp-vyp*xp)/dsqrt(xp**2+yp**2)
 c              write(6,*) GAM,TPRHO,TUK,ug*((GAM-1.0d0)/TPRHO)*TUK
