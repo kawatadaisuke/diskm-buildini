@@ -8,6 +8,7 @@ c70*******************************************************************
       include 'define.f'
       integer MNGAL,MND
       parameter (MNGAL=2,MND=10)
+      parameter (GAM=5.0d0/3.0d0)
       integer i,j,ig,ngal,i1,i2,id,im,npaskip
       integer flagascii,flagbi,flagrot(MNGAL),flagini
       integer nmgr,nejmgr(MNZMGR),nsniimgr,nzmgr
